@@ -1,6 +1,8 @@
+import 'leaflet/dist/leaflet.css'
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import 'leaflet/dist/leaflet.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_PLATFORM_API_KEY}&libraries=places`}
+          async
+          defer
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>

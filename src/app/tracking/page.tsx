@@ -4,27 +4,18 @@ import dynamic from 'next/dynamic'
 import AddressInput from '../components/fragments/AddressInput'
 
 function DriverTracking() {
-  //Map Input Search
-  const [clientLocation, setClientLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
-
-  //live tracking feature
-  // const defaultPosition = {
-  //   name: 'Dlooti',  
-  //   lat: 0.5266058859966887,
-  //   lng: 101.42878570224349,
-  //   address: 'Dlooti'
-  // }
 
   const Trackmap = dynamic(() => import('../components/core/Trackmap'),{ssr: false})
-
-  const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null > (null)
   
+  //Map Input Search
+  const [clientLocation,setClientLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
+  const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null > (null)
+
   const setDriverPosition = () => {
     if('geolocation' in navigator){
       navigator.geolocation.getCurrentPosition(
         async(position) => {
           const {latitude, longitude} = position.coords
-
           const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_PLATFORM_API_KEY}`)
           
           const data = await res.json()
@@ -65,10 +56,7 @@ function DriverTracking() {
   return (
     <div>
       <AddressInput onPlaceSelect={setClientLocation}/>
-
-      {clientLocation && (
-        <Trackmap driverLocation={driverLocation} clientLocation={clientLocation} />
-      )}
+      {clientLocation && ( <Trackmap driverLocation={driverLocation} clientLocation={clientLocation} /> )}
     </div>
   )
 }

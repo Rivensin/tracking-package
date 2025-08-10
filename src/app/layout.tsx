@@ -1,8 +1,9 @@
 import 'leaflet/dist/leaflet.css'
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import 'leaflet/dist/leaflet.css';
+// import { Google_Sans } from 'next/font/google';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +14,19 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const geistRoboto = Roboto({
+  variable : '--font-roboto',
+  subsets : ['latin'],
+  weight: ['100','200','300','500','600','700','800','900'],
+})
+
+// const googleSans = Google_Sans({
+//   variable: '--font-googlesans',
+//   subsets: ['latin'],
+//   weight: ['400','700'],
+//   display: 'swap'
+// })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -33,7 +47,7 @@ export default function RootLayout({
           defer
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable}`}>
         {children}
       </body>
     </html>

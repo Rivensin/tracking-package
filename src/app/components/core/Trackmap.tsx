@@ -44,7 +44,7 @@ const AutoFitBounds = ({driverLocation, clientLocation} : MapProps) => {
   useEffect(() => {
     if(driverLocation && clientLocation){
       const bounds : [[number,number], [number, number]] = [[driverLocation.lat, driverLocation.lng], [clientLocation.lat, clientLocation.lng]]
-      map.fitBounds(bounds, {padding: [50,50]})
+      map.fitBounds(bounds, {padding: [30,30]})
     }
   },[driverLocation, clientLocation, map])
 
@@ -54,8 +54,11 @@ const AutoFitBounds = ({driverLocation, clientLocation} : MapProps) => {
 function Trackmap({driverLocation, clientLocation} : MapProps) {
   
   return (
-    <div>
-      <MapContainer center={[0.5071, 101.4478]} zoom={15} className='h-[500px]'>
+    <div className='max-w-md mx-auto px-4 mt-4'>
+      <MapContainer 
+        center={driverLocation && clientLocation ? undefined : [0.5071, 101.4478]} 
+        zoom={driverLocation && clientLocation ? undefined : 15} 
+        className='h-[500px]'>
         <TileLayer
           attribution='Map data © OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

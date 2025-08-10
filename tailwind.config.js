@@ -9,7 +9,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        roboto: 'var(--font-roboto)',
+      },
+      colors: {
+        purpleBg : '#a492fd',
+      }
+    },
   },
   plugins: [],
 }

@@ -1,16 +1,29 @@
-import { NextResponse } from "next/server"
+import { addOrder, updateOrder } from "@/app/lib/firebase/services"
+import { NextRequest, NextResponse } from "next/server"
 
-let latestDriverLocation = {lat:0, lng:0}
+export async function POST(req: NextRequest){
+  const data = await req.json()
 
-export async function POST(req: Request){
-  const body = await req.json()
-  const {lat, lng} = body
+  const id = req.nextUrl.searchParams.get('id')
+
+  if(id){
+    const res = await updateOrder({id,lat : data.lat, lng: data.lng})  
+    if(res){
+    return NextResponse.json({success: true, message: 'Update Success'})
+    }
+  }
+
+  const res = await addOrder(data)
+
+  if(res){
+    return NextResponse.json({success: true, message: 'Add Order Success', id: res.id})
+  } 
   
-  latestDriverLocation = {lat, lng}
+  return NextResponse.json({success: false, message: 'Add Order Failed'})
   
-  return NextResponse.json({success: true})
 }
 
-export async function GET(){
-  return NextResponse.json(latestDriverLocation)
-}
+
+// export async function GET(){
+//   return NextResponse.json(latestDriverLocation)
+// }

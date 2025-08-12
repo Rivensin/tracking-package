@@ -15,7 +15,6 @@ type Props = {
 function AddressInput({onPlaceSelect} : Props) {
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const [isAddress,SetIsAddress] = useState(false)
   const [sessionToken, setSessionToken] = useState<google.maps.places.AutocompleteSessionToken | null > (null)
   
   const startNewSession = () => {
@@ -49,7 +48,6 @@ function AddressInput({onPlaceSelect} : Props) {
 
     autoComplete.addListener('place_changed', () => {
       const place = autoComplete.getPlace()
-      SetIsAddress(true)
       if(!place.geometry || !place.geometry.location){
         console.warn('No geometry data available for this place.')
         return
@@ -67,17 +65,13 @@ function AddressInput({onPlaceSelect} : Props) {
   },[sessionToken,onPlaceSelect])
 
   return (
-    <div className='max-w-md px-4 mx-auto mt-4 flex justify-center items-center'>
+    <div>
       <input 
         type='text'
         ref={inputRef}
         placeholder='masukkan tujuan delivery'
-        className='border rounded w-3/4 mb-4 mr-2 h-10 font-roboto font-light'
-      />
-      <button
-        className={`w-1/4 h-10 px-4 bg-blue-500 hover:opacity-80 duration-500 text-white rounded mb-4 text-sm font-roboto font-light ${isAddress ? '' : 'pointer-events-none'}`}>
-        {isAddress ? 'Start' : 'Cari'}
-      </button>      
+        className='pl-2 w-full border rounded mb-4 mr-2 h-10 font-roboto font-light'
+      />        
     </div>
   )
 }

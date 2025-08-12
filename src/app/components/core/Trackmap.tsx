@@ -44,7 +44,7 @@ const AutoFitBounds = ({driverLocation, clientLocation} : MapProps) => {
   useEffect(() => {
     if(driverLocation && clientLocation){
       const bounds : [[number,number], [number, number]] = [[driverLocation.lat, driverLocation.lng], [clientLocation.lat, clientLocation.lng]]
-      map.fitBounds(bounds, {padding: [30,30]})
+      map.fitBounds(bounds, {padding: [50,50]})
     }
   },[driverLocation, clientLocation, map])
 

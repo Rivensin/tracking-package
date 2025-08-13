@@ -63,6 +63,13 @@ function DriverTracking() {
   }, [])
 
   const startDelivery = async() => {
+    if(isDelivery){
+      setIsDelivery(false)
+      return await fetch(`api/tracking?id=${tripId}`,{
+        method: 'DELETE'
+      })
+    }
+
     setIsDelivery(true)
     const req = await fetch('/api/tracking',{
       method: 'POST',
@@ -93,7 +100,7 @@ function DriverTracking() {
     <div>
       <div className='flex justify-center items-center mt-4 px-4'>
         <div className='w-3/4 mr-2'>
-          <AddressInput onPlaceSelect={setClientLocation}/>
+          <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false}/>
         </div>
         <button
           className={`w-1/4 h-10 hover:opacity-80 duration-500 text-white rounded mb-4 text-sm font-roboto font-light ${clientLocation ? 'bg-blue-500' : 'pointer-events-none bg-slate-500/60'} ${isDelivery && clientLocation ? 'bg-red-500' : ''}`}

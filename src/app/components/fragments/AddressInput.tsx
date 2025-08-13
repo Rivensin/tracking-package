@@ -9,10 +9,11 @@ type Props = {
       lat: number
       lng: number
       address: string
-      }) => void 
+      }) => void
+    disabled : boolean
     }
 
-function AddressInput({onPlaceSelect} : Props) {
+function AddressInput({onPlaceSelect, disabled=false} : Props) {
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [sessionToken, setSessionToken] = useState<google.maps.places.AutocompleteSessionToken | null > (null)
@@ -70,7 +71,8 @@ function AddressInput({onPlaceSelect} : Props) {
         type='text'
         ref={inputRef}
         placeholder='masukkan tujuan delivery'
-        className='pl-2 w-full border rounded mb-4 mr-2 h-10 font-roboto font-light'
+        className={`pl-2 w-full border rounded mb-4 mr-2 h-10 font-roboto font-light ${disabled ? 'bg-slate-300' : 'bg-white'}`}
+        disabled = {disabled}
       />        
     </div>
   )

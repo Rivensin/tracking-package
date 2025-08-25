@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet'
 import type {LatLngExpression} from 'leaflet'
 import L from 'leaflet'
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const redIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -40,7 +40,6 @@ type MapProps = {
 
 const AutoFitBounds = ({driverLocation, clientLocation} : MapProps) => {
   const map = useMap()
-
   useEffect(() => {
     if(driverLocation && clientLocation){
       const bounds : [[number,number], [number, number]] = [[driverLocation.lat, driverLocation.lng], [clientLocation.lat, clientLocation.lng]]
@@ -56,8 +55,8 @@ function Trackmap({driverLocation, clientLocation} : MapProps) {
   return (
     <div className='max-w-md mx-auto px-4 mt-4'>
       <MapContainer 
-        center={driverLocation && clientLocation ? undefined : [0.5071, 101.4478]} 
-        zoom={driverLocation && clientLocation ? undefined : 15} 
+        center={[0.5071, 101.4478]} 
+        zoom={15} 
         className='h-[500px]'>
         <TileLayer
           attribution='Map data © OpenStreetMap contributors'

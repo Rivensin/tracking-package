@@ -16,6 +16,13 @@ interface TrackingRequest {
   status: string
 }
 
+interface UpdateLocation {
+  id: string;
+  lat: number;
+  lng: number;
+  status?: string;
+}
+
 export async function addOrder(data : TrackingRequest){
   if(data){
     data.status = 'Sedang Mengantar' 
@@ -26,17 +33,23 @@ export async function addOrder(data : TrackingRequest){
   }
 }
 
-export async function updateOrder({id, lat, lng} :  {id: string, lat : number,lng : number}){
+export async function updateOrder({id, lat, lng, status} : UpdateLocation){
   const q = query(collection(firestore,'delivery'), where('id','==',id))
   
   const snapshot = await getDocs(q)
   
   if(!snapshot.empty){
     const docRef = snapshot.docs[0].ref
-    await updateDoc(docRef,{
+
+    const payload : any = {
       "driverLocation.lat": lat,
-      "driverLocation.lng": lng,
-    })
+      "driverLocation.lng": lng
+    }
+
+    if(status !== undefined){
+      payload.status = status
+    }
+    await updateDoc(docRef,payload)
 
     return {status: true, message: 'Update Success', statusCode: 200}
   } else {

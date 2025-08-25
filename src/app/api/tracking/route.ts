@@ -1,4 +1,4 @@
-import { addOrder, deleteOrder, updateOrder } from "@/app/lib/firebase/services"
+import { addOrder, deleteOrder, updateOrder } from "@/lib/firebase/services"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest){
@@ -7,7 +7,7 @@ export async function POST(req: NextRequest){
   const id = req.nextUrl.searchParams.get('id')
 
   if(id){
-    const res = await updateOrder({id,lat : data.lat, lng: data.lng})  
+    const res = await updateOrder({id,lat : data.lat, lng: data.lng, status: data.status})  
     if(res){
       return NextResponse.json({success: true, message: res.message})
     }

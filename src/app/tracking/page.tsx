@@ -1,17 +1,17 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
-import AddressInput from '../components/fragments/AddressInput'
+import AddressInput from '../../components/fragments/AddressInput'
 
 function DriverTracking() {
 
-  const Trackmap = dynamic(() => import('../components/core/Trackmap'),{ssr: false})
-  
-  //Map Input Search
-  const [clientLocation,setClientLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
-  const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null > (null)
+  const Trackmap = dynamic(() => import('../../components/core/Trackmap'),{ssr: false})
   const [isDelivery,setIsDelivery] = useState(false)
   const [tripId, setTripId] = useState<string | null> (null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null> (null)
+  //Map Input Search
+  const [clientLocation,setClientLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
+  const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
 
   const setDriverPosition = () => {
     if('geolocation' in navigator){
@@ -32,7 +32,31 @@ function DriverTracking() {
 
           const newLocation = {name: name, lat: latitude, lng: longitude, address: address}
 
-          if(!driverLocation || Math.abs(driverLocation.lat - latitude) > 0.0001 || Math.abs(driverLocation.lng - longitude) > 0.0001){
+          if(clientLocation && (Math.abs(latitude - clientLocation.lat) < 0.0005 || Math.abs(longitude - clientLocation.lng) < 0.0005)){
+            setDriverLocation(newLocation)
+
+            await fetch(`api/tracking?id=${tripId}`, {
+              method : 'POST',
+              headers : {
+                'content-type' : 'application/json'
+              },
+              body: JSON.stringify({
+                lat: newLocation.lat,
+                lng: newLocation.lng,
+                status: 'Selesai'
+              })
+            }) 
+
+            setIsDelivery(false)
+            if(intervalRef.current){
+              clearInterval(intervalRef.current)
+            }
+            localStorage.removeItem('trackingSession')
+            setClientLocation(null)
+            setDriverPosition()
+          } 
+
+          if(!driverLocation || (Math.abs(driverLocation.lat - latitude) > 0.001 || Math.abs(driverLocation.lng - longitude) > 0.001)){
             setDriverLocation(newLocation)
 
             if(tripId){
@@ -59,23 +83,38 @@ function DriverTracking() {
   }
 
   useEffect(() => {
-    setDriverPosition()  // run once after mount
+    const load= JSON.parse(localStorage.getItem('trackingSession') ?? 'null') 
+
+    if(load){
+      setIsDelivery(true)
+      setTripId(load.id)
+      setDriverLocation(load.driverLocation)
+      setClientLocation(load.clientLocation)
+      intervalRef.current = intervalRef.current = setInterval(() => {
+        setDriverPosition()
+      },5000)
+    } else {
+      setDriverPosition()  // run once after mount
+    }
   }, [])
 
   const startDelivery = async() => {
-    if(isDelivery){
+    if(isDelivery && intervalRef.current){
       setIsDelivery(false)
+      localStorage.removeItem('trackingSession')
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+
       return await fetch(`api/tracking?id=${tripId}`,{
         method: 'DELETE'
       })
     }
 
     setIsDelivery(true)
+
     const req = await fetch('/api/tracking',{
       method: 'POST',
-      headers: {
-        'content-type' : 'application/json',
-      },
+      headers: {'content-type' : 'application/json'},
       body: JSON.stringify({driverLocation,clientLocation})    
     })
 
@@ -83,19 +122,22 @@ function DriverTracking() {
 
     if(data.success){
       setTripId(data.id)
+
+      intervalRef.current = setInterval(() => {
+        setDriverPosition()
+      },5000)
+
+      localStorage.setItem('trackingSession', JSON.stringify({
+        id: data.id,
+        clientLocation,
+        driverLocation,
+        startedAt: Date.now()
+      }))
     } else {
       setIsDelivery(false)
     }
-    
-    setInterval(() => {
-      setDriverPosition()
-    },5000)
-    
   }
   
-  console.log(driverLocation)
-  console.log(clientLocation)
-  console.log(tripId)
   return (
     <div>
       <div className='flex justify-center items-center mt-4 px-4'>
@@ -109,7 +151,7 @@ function DriverTracking() {
         </button>  
       </div>
 
-      {clientLocation && ( <Trackmap driverLocation={driverLocation} clientLocation={clientLocation} />)}
+    <Trackmap driverLocation={driverLocation} clientLocation={clientLocation} />
         
     </div>
   )

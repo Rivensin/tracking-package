@@ -1,9 +1,9 @@
 'use client'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
-import Trackmap from '../components/core/Trackmap'
+import Trackmap from '../../components/core/Trackmap'
 
-const Map = dynamic(() => import('../components/core/Trackmap'), {ssr: false})
+const Map = dynamic(() => import('../../components/core/Trackmap'), {ssr: false})
 
 function ClientSide() {
   const [location, setLocation] = useState({lat:0, lng: 0})

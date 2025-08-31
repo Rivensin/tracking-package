@@ -14,6 +14,7 @@ interface TrackingRequest {
   driverLocation : LocationData
   clientLocation : LocationData
   status: string
+  tanggal: string
 }
 
 interface UpdateLocation {
@@ -22,10 +23,26 @@ interface UpdateLocation {
   lng: number;
   status?: string;
 }
+export async function retriveOrder(){
+  const snapshot = await getDocs(collection(firestore,'delivery'))
+  const data = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }))
+
+  return data
+}
+
+export async function retriveOrderById(collectionName: string,orderId: string){
+  const snapshot = await getDoc(doc(firestore,collectionName,orderId))
+  const data = snapshot.data()
+  return data
+}
 
 export async function addOrder(data : TrackingRequest){
   if(data){
-    data.status = 'Sedang Mengantar' 
+    data.status = 'Sedang Mengantar'
+    data.tanggal = new Date().toISOString()
     const add = await addDoc(collection(firestore, 'delivery'),{...data,})
     return {id: add.id, status: true, message: 'Order Shipped', statusCode: 200}
   } else {

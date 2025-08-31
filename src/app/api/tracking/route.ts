@@ -1,4 +1,4 @@
-import { addOrder, deleteOrder, updateOrder } from "@/lib/firebase/services"
+import { addOrder, deleteOrder, retriveOrder, updateOrder } from "@/lib/firebase/services"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest){
@@ -36,8 +36,12 @@ export async function DELETE(req: NextRequest){
   }
 }
 
+export async function GET(req: NextRequest){
+  const data = await retriveOrder()
 
-
-// export async function GET(){
-//   return NextResponse.json(latestDriverLocation)
-// }
+  return NextResponse.json({
+    status: 200,
+    message: 'retrive success',
+    data: data
+  })
+}

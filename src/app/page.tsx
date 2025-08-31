@@ -1,95 +1,43 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import useSWR from "swr";
+import Link from "next/link";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const fetcher = (url: string) => fetch(url).then(res => res.json())
+  const {data,error,isLoading} = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/tracking`,fetcher)
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  if(isLoading) return <div>Loading</div>
+  if(error) return <div>Error Loading</div>
+
+  return (
+    <div className="px-4">
+      <div className="mt-4 text-2xl font-roboto">Delivery List</div>
+      <div className="mb-4 text-slate-500 italic font-roboto font-light ">Track delivery status & driver location</div>
+      <div className="flex justify-center items-center bg-slate-300 py-4 text-center font-sans font-semibold rounded-sm">
+        <div className="w-1/3">Tanggal</div>
+        <div className="w-1/3">Tujuan</div>
+        <div className="w-1/3">Status</div>  
+      </div>
+      {data?.data?.length > 0 && (
+        data?.data?.map((delivery: any) => (
+        <div 
+          key={delivery.id} 
+          className={`flex justify-center items-center py-4 text-center font-sans font-medium ${delivery.status === 'Sedang Mengantar' ? 'bg-red-500/60' : 'bg-green-500/60'}`}>
+            <div className="w-1/3">
+              {new Date(delivery.tanggal).toLocaleString('en-GB')}
+            </div>
+            <div className="w-1/3">
+              {delivery.clientLocation.name}
+            </div>
+            <div className="w-1/3">
+              {delivery.status === 'Sedang Mengantar' ? (
+                <Link href={`/clients/${delivery.id}`} className="underline text-[#5E50D2] hover:opacity-60 transition-all duration-500 ease-out">{delivery.status}</Link>) 
+                : 
+                delivery.status}
+            </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))
+      )}
     </div>
   );
 }

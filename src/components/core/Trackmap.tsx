@@ -1,8 +1,7 @@
 'use client'
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet'
-import type {LatLngExpression} from 'leaflet'
 import L from 'leaflet'
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 const redIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -14,7 +13,7 @@ const redIcon = new L.Icon({
 });
 
 const driverIcon = new L.Icon({
-  iconUrl: 'icons/driver.png',
+  iconUrl: '/icons/driver.png',
   iconSize: [60, 60],       // You can adjust size
   iconAnchor: [20, 40],     // Point of the icon which will correspond to marker's location
   popupAnchor: [0, -40],    // Point from which the popup should open relative to the iconAnchor
@@ -49,7 +48,6 @@ const AutoFitBounds = ({driverLocation, clientLocation} : MapProps) => {
 
   return null
 }
-
 function Trackmap({driverLocation, clientLocation} : MapProps) {
   
   return (
@@ -78,7 +76,7 @@ function Trackmap({driverLocation, clientLocation} : MapProps) {
         )}
         {clientLocation && (
           <Marker position={[clientLocation.lat, clientLocation.lng]} icon={redIcon}>
-            <Popup>Driver Location</Popup>
+            <Popup>Client Location</Popup>
           </Marker>
         )}
         <AutoFitBounds driverLocation={driverLocation} clientLocation={clientLocation} />

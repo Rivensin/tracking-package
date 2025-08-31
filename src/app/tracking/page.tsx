@@ -3,9 +3,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import AddressInput from '../../components/fragments/AddressInput'
 
-function DriverTracking() {
+const Trackmap = dynamic(() => import('../../components/core/Trackmap'),{ssr: false})
 
-  const Trackmap = dynamic(() => import('../../components/core/Trackmap'),{ssr: false})
+function DriverTracking() {
   const [isDelivery,setIsDelivery] = useState(false)
   const [tripId, setTripId] = useState<string | null> (null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null> (null)
@@ -142,7 +142,7 @@ function DriverTracking() {
     <div>
       <div className='flex justify-center items-center mt-4 px-4'>
         <div className='w-3/4 mr-2'>
-          <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false}/>
+          <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false} defaultValue={clientLocation?.address || ''}/>
         </div>
         <button
           className={`w-1/4 h-10 hover:opacity-80 duration-500 text-white rounded mb-4 text-sm font-roboto font-light ${clientLocation ? 'bg-blue-500' : 'pointer-events-none bg-slate-500/60'} ${isDelivery && clientLocation ? 'bg-red-500' : ''}`}
@@ -150,7 +150,7 @@ function DriverTracking() {
           {isDelivery ? 'Batal' : 'Start'}
         </button>  
       </div>
-
+    
     <Trackmap driverLocation={driverLocation} clientLocation={clientLocation} />
         
     </div>

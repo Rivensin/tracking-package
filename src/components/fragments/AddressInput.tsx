@@ -11,9 +11,10 @@ type Props = {
       address: string
       }) => void
     disabled : boolean
+    defaultValue: string
     }
 
-function AddressInput({onPlaceSelect, disabled=false} : Props) {
+function AddressInput({onPlaceSelect, disabled=false, defaultValue} : Props) {
 
   const inputRef = useRef<HTMLInputElement>(null)
   const [sessionToken, setSessionToken] = useState<google.maps.places.AutocompleteSessionToken | null > (null)
@@ -49,6 +50,7 @@ function AddressInput({onPlaceSelect, disabled=false} : Props) {
 
     autoComplete.addListener('place_changed', () => {
       const place = autoComplete.getPlace()
+      if(!place) return
       if(!place.geometry || !place.geometry.location){
         console.warn('No geometry data available for this place.')
         return
@@ -73,6 +75,7 @@ function AddressInput({onPlaceSelect, disabled=false} : Props) {
         placeholder='Masukkan tujuan delivery'
         className={`pl-2 w-full border rounded mb-4 mr-2 h-10 font-roboto font-light ${disabled ? 'bg-slate-300' : 'bg-white'}`}
         disabled = {disabled}
+        value={defaultValue}
       />        
     </div>
   )

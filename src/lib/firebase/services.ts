@@ -1,5 +1,5 @@
 import app from "./init";
-import { collection, getDocs, doc, getDoc, addDoc, getFirestore, query, where, updateDoc, Timestamp, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, addDoc, getFirestore, query, where, updateDoc, deleteDoc } from "firebase/firestore";
 
 const firestore =  getFirestore(app)
 
@@ -10,7 +10,8 @@ interface LocationData {
   address: string;
 }
 
-interface TrackingRequest {
+export interface TrackingRequest {
+  id: string
   driverLocation : LocationData
   clientLocation : LocationData
   status: string
@@ -23,6 +24,7 @@ interface UpdateLocation {
   lng: number;
   status?: string;
 }
+
 export async function retriveOrder(){
   const snapshot = await getDocs(collection(firestore,'delivery'))
   const data = snapshot.docs.map(doc => ({
@@ -58,14 +60,12 @@ export async function updateOrder({id, lat, lng, status} : UpdateLocation){
   if(!snapshot.empty){
     const docRef = snapshot.docs[0].ref
 
-    const payload : any = {
+    const payload = {
       "driverLocation.lat": lat,
-      "driverLocation.lng": lng
+      "driverLocation.lng": lng,
+      ...(status !== undefined && {status}),
     }
 
-    if(status !== undefined){
-      payload.status = status
-    }
     await updateDoc(docRef,payload)
 
     return {status: true, message: 'Update Success', statusCode: 200}
@@ -78,10 +78,10 @@ export async function deleteOrder({trip} : {trip: string}){
   try {
     const docRef = doc(firestore,'delivery',trip)
     await deleteDoc(docRef)
-    return {status: true, message: 'Delete Success', statusCode: 400}
+    return {status: true, message: 'Delete Success', statusCode: 200}
   } catch (error) {
     console.error('Error Deleting Docuement',error)
-    return {status: false, message: 'Delete Failed', statusCode: 200}
+    return {status: false, message: 'Delete Failed', statusCode: 400}
   }
   
 }

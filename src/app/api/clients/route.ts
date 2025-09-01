@@ -1,4 +1,4 @@
-import { addOrder, deleteOrder, retriveOrder, retriveOrderById, updateOrder } from "@/lib/firebase/services"
+import { retriveOrderById } from "@/lib/firebase/services"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: NextRequest){

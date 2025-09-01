@@ -1,6 +1,7 @@
 'use client'
 import useSWR from "swr";
 import Link from "next/link";
+import { TrackingRequest } from "@/lib/firebase/services";
 
 export default function Home() {
   const fetcher = (url: string) => fetch(url).then(res => res.json())
@@ -19,7 +20,7 @@ export default function Home() {
         <div className="w-1/3">Status</div>  
       </div>
       {data?.data?.length > 0 && (
-        data?.data?.map((delivery: any) => (
+        data?.data?.map((delivery: TrackingRequest) => (
         <div 
           key={delivery.id} 
           className={`flex justify-center items-center py-4 text-center font-sans font-medium ${delivery.status === 'Sedang Mengantar' ? 'bg-red-500/60' : 'bg-green-500/60'}`}>

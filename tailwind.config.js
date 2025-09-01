@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       fontFamily: {
         roboto: 'var(--font-roboto)',
+        monaSans: 'var(--font-mona-sans)'
       },
       colors: {
         purpleBg : '#a492fd',

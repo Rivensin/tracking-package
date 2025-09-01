@@ -51,11 +51,11 @@ const AutoFitBounds = ({driverLocation, clientLocation} : MapProps) => {
 function Trackmap({driverLocation, clientLocation} : MapProps) {
   
   return (
-    <div className='max-w-md mx-auto px-4 mt-4'>
+    <div className='max-w-md mx-auto mt-2 rounded-md overflow-hidden'>
       <MapContainer 
         center={[0.5071, 101.4478]} 
         zoom={15} 
-        className='h-[500px]'>
+        className='h-[550px]'>
         <TileLayer
           attribution='Map data © OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

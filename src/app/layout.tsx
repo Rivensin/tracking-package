@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css'
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Roboto } from "next/font/google";
+import { Geist, Geist_Mono, Roboto, Mona_Sans } from "next/font/google";
 import "./globals.css";
 import 'leaflet/dist/leaflet.css';
 import Navbar from './navbar';
@@ -21,6 +21,12 @@ const geistRoboto = Roboto({
   weight: ['100','200','300','500','600','700','800','900'],
 })
 
+const monaSans = Mona_Sans({
+  variable : '--font-mona-sans',
+  subsets : ['latin'],
+  weight: ['200','300','500','600','700','800','900'],
+})
+
 export const viewport : Viewport = {
   width: 'device-width',
   initialScale: 1
@@ -32,7 +38,7 @@ export const metadata: Metadata = {
   description:'Dlooti Tracking for Delivery',
   authors: [{name:'riven', url:process.env.NEXT_PUBLIC_API_URL}],
   icons: {
-    icon: 'icons/icon.png',
+    icon: '/icons/icon.png',
   },
   openGraph: {
     title: 'Dlooti',
@@ -62,7 +68,7 @@ export default function RootLayout({
           defer
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable} ${monaSans.variable}`}>
         <Navbar />
         {children}
       </body>

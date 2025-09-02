@@ -139,8 +139,8 @@ function DriverTracking() {
   }
   
   return (
-    <div>
-      <div className='flex justify-center items-center mt-6 px-4'>
+    <div className='px-4'>
+      <div className='flex justify-center items-center mt-6'>
         <div className='w-3/4 mr-2'>
           <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false} defaultValue={clientLocation?.address || ''}/>
         </div>

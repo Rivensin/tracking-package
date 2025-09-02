@@ -19,7 +19,7 @@ function Navbar() {
           />
         </Link>
       </div>
-      <div className='font-roboto text-[#5E50D2]'>
+      <div className='font-roboto text-[#5E50D2] text-lg'>
         Dlooti Tracking Delivery
       </div>
     </header>

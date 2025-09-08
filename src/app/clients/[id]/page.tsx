@@ -16,7 +16,7 @@ function Client() {
   
   return (
     <div>
-      <div className='mt-6 px-4'>
+      <div className='mt-5 px-4'>
         <div className='max-w-md h-full'>
           {data?.data && (
           <Trackmap driverLocation={data?.data?.driverLocation} clientLocation={data?.data?.clientLocation} />
@@ -28,13 +28,13 @@ function Client() {
               <Image 
               src='/icons/driver.png'
               width={50}
-              height={50}
+              height={50} 
               alt='driver-logo'
               unoptimized
               />
             </div>
             <div>
-              <div>Alim</div>
+              <div>Dlooti</div>
               <div className='text-slate-500/80'>Driver</div>
             </div>
           </div>

@@ -75,7 +75,7 @@ function AddressInput({onPlaceSelect, disabled=false, defaultValue} : Props) {
         placeholder='Masukkan tujuan delivery'
         className={`pl-2 w-full border rounded mb-4 mr-2 h-10 font-roboto font-light ${disabled ? 'bg-slate-300' : 'bg-white'}`}
         disabled = {disabled}
-        value={defaultValue}
+        defaultValue={defaultValue}
       />        
     </div>
   )

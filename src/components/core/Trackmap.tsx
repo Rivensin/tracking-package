@@ -57,7 +57,7 @@ function Trackmap({driverLocation, clientLocation} : MapProps) {
         zoom={15} 
         className='h-[470px]'>
         <TileLayer
-          attribution='Map data © OpenS treetMap contributors'
+          attribution='Mapdata©OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 

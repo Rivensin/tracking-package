@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
+import NotFound from '../not-found'
 
 function page() {
-  return notFound()
+  <NotFound />
 }
 
 export default page

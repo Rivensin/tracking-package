@@ -20,6 +20,8 @@ export interface TrackingRequest {
 
 interface UpdateLocation {
   id: string;
+  address: string;
+  name: string;
   lat: number;
   lng: number;
   status?: string;
@@ -52,15 +54,13 @@ export async function addOrder(data : TrackingRequest){
   }
 }
 
-export async function updateOrder({id, lat, lng, status} : UpdateLocation){
-  const q = query(collection(firestore,'delivery'), where('id','==',id))
-  
-  const snapshot = await getDocs(q)
-  
-  if(!snapshot.empty){
-    const docRef = snapshot.docs[0].ref
+export async function updateOrder({id, address, name, lat, lng, status} : UpdateLocation){
+  try{
+    const docRef = doc(firestore,'delivery',id)
 
     const payload = {
+      "driverLocation.address": address,
+      "driverLocation.name": name,
       "driverLocation.lat": lat,
       "driverLocation.lng": lng,
       ...(status !== undefined && {status}),
@@ -69,8 +69,9 @@ export async function updateOrder({id, lat, lng, status} : UpdateLocation){
     await updateDoc(docRef,payload)
 
     return {status: true, message: 'Update Success', statusCode: 200}
-  } else {
-    return {status: false, message: 'Update Failed', statusCode: 400}
+  }
+  catch(error) {
+    return {status: false, message: 'Update Fail', statusCode: 400}
   }
 }
 

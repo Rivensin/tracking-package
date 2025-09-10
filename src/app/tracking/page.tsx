@@ -7,15 +7,22 @@ const Trackmap = dynamic(() => import('../../components/core/Trackmap'),{ssr: fa
 
 function DriverTracking() {
   const [isDelivery,setIsDelivery] = useState(false)
-  const [tripId, setTripId] = useState<string | null> (null)
+  const tripRef = useRef<string | null> (null)
+  const watchIdRef = useRef<number | null> (null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null> (null)
   //Map Input Search
   const [clientLocation,setClientLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
-  const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
+  const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)  
+  console.log(tripRef.current)
 
   const setDriverPosition = () => {
     if('geolocation' in navigator){
-      navigator.geolocation.getCurrentPosition(
+
+      if(watchIdRef.current !== null){
+        navigator.geolocation.clearWatch(watchIdRef.current)
+      }
+      
+      watchIdRef.current = navigator.geolocation.watchPosition(
         async(position) => {
           const {latitude, longitude} = position.coords
           const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_PLATFORM_API_KEY}`)
@@ -32,20 +39,23 @@ function DriverTracking() {
 
           const newLocation = {name: name, lat: latitude, lng: longitude, address: address}
 
-          if(clientLocation && (Math.abs(latitude - clientLocation.lat) < 0.0005 || Math.abs(longitude - clientLocation.lng) < 0.0005)){
+          if(clientLocation && (Math.abs(latitude - clientLocation.lat) < 0.0005 && Math.abs(longitude - clientLocation.lng) < 0.0005)){
             setDriverLocation(newLocation)
-
-            await fetch(`api/tracking?id=${tripId}`, {
+            const complete = await fetch(`/api/tracking?id=${tripRef.current}`, {
               method : 'POST',
               headers : {
                 'content-type' : 'application/json'
               },
               body: JSON.stringify({
+                address: newLocation.address,
+                name: newLocation.name,
                 lat: newLocation.lat,
                 lng: newLocation.lng,
-                status: 'Selesai'
+                status: 'Sudah Sampai'
               })
             }) 
+            const res = await complete.json()
+            console.log(res.message)
 
             setIsDelivery(false)
             if(intervalRef.current){
@@ -53,19 +63,20 @@ function DriverTracking() {
             }
             localStorage.removeItem('trackingSession')
             setClientLocation(null)
-            setDriverPosition()
           } 
 
-          if(!driverLocation || (Math.abs(driverLocation.lat - latitude) > 0.001 || Math.abs(driverLocation.lng - longitude) > 0.001)){
+          if(!driverLocation || (Math.abs(driverLocation.lat - latitude) > 0.001 && Math.abs(driverLocation.lng - longitude) > 0.001)){
             setDriverLocation(newLocation)
 
-            if(tripId){
-              await fetch(`api/tracking?id=${tripId}`, {
+            if(tripRef){
+              await fetch(`/api/tracking?id=${tripRef.current}`, {
               method : 'POST',
               headers : {
                 'content-type' : 'application/json'
               },
               body: JSON.stringify({
+                address: newLocation.address,
+                name: newLocation.name,
                 lat: newLocation.lat,
                 lng: newLocation.lng,
               })
@@ -77,7 +88,7 @@ function DriverTracking() {
           code: error.code,
           message: error.message  
         }), 
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000}
+        { enableHighAccuracy: false, maximumAge: 10000, timeout: 5000}
       )
     }
   }
@@ -87,14 +98,27 @@ function DriverTracking() {
 
     if(load){
       setIsDelivery(true)
-      setTripId(load.id)
+      tripRef.current = load.id
       setDriverLocation(load.driverLocation)
       setClientLocation(load.clientLocation)
-      intervalRef.current = intervalRef.current = setInterval(() => {
+      intervalRef.current = setInterval(() => {
         setDriverPosition()
       },5000)
     } else {
       setDriverPosition()  // run once after mount
+    }
+
+    return () => {
+      if(watchIdRef.current !== null){
+        navigator.geolocation.clearWatch(watchIdRef.current)
+        watchIdRef.current = null
+      }
+      if(intervalRef.current !== null){
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+
+      tripRef.current= null
     }
   }, [])
 
@@ -104,8 +128,13 @@ function DriverTracking() {
       localStorage.removeItem('trackingSession')
       clearInterval(intervalRef.current)
       intervalRef.current = null
-
-      return await fetch(`api/tracking?id=${tripId}`,{
+      tripRef.current = null
+      if(watchIdRef.current !== null){
+        navigator.geolocation.clearWatch(watchIdRef.current)
+        watchIdRef.current = null
+      }
+  
+      return await fetch(`api/tracking?id=${tripRef.current}`,{
         method: 'DELETE'
       })
     }
@@ -121,12 +150,10 @@ function DriverTracking() {
     const data = await req.json()
 
     if(data.success){
-      setTripId(data.id)
-
+      tripRef.current = data.id
       intervalRef.current = setInterval(() => {
         setDriverPosition()
       },5000)
-
       localStorage.setItem('trackingSession', JSON.stringify({
         id: data.id,
         clientLocation,
@@ -142,7 +169,7 @@ function DriverTracking() {
     <div className='px-4'>
       <div className='flex justify-center items-center mt-6'>
         <div className='w-3/4 mr-2'>
-          <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false} defaultValue={clientLocation?.address || ''}/>
+          <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false} defaultValue={clientLocation?.name || ''}/>
         </div>
         <button
           className={`w-1/4 h-10 hover:opacity-80 duration-500 text-white rounded mb-4 text-sm font-roboto font-light ${clientLocation ? 'bg-blue-500' : 'pointer-events-none bg-slate-500/60'} ${isDelivery && clientLocation ? 'bg-red-500' : ''}`}

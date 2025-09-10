@@ -10,7 +10,7 @@ const Trackmap = dynamic(() => import('../../../components/core/Trackmap'),{ssr:
 
 function Client() {
   const {id} = useParams()
-  const {data,isLoading,error} = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/clients?id=${id}`,fetcher)
+  const {data,isLoading,error} = useSWR(`/api/clients?id=${id}`,fetcher)
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error Loading</div>
   

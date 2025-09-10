@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Roboto, Mona_Sans } from "next/font/google";
 import "./globals.css";
 import 'leaflet/dist/leaflet.css';
 import Navbar from './navbar';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,7 +63,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
+        <Script
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_PLATFORM_API_KEY}&libraries=places`}
           async
           defer

@@ -12,7 +12,7 @@ export default function Home() {
   if(error) return <div>Error Loading</div>
 
   return (
-    <div className="px-4">
+    <div className="min-h-screen px-4">
       <div>
         <span className="mt-4 text-2xl font-roboto">Delivery List</span>
       </div>

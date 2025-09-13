@@ -5,6 +5,7 @@ import "./globals.css";
 import 'leaflet/dist/leaflet.css';
 import Navbar from './navbar';
 import Script from 'next/script';
+import Footer from './footer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,9 +70,10 @@ export default function RootLayout({
           defer
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable} ${monaSans.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable} ${monaSans.variable} min-h-screen flex flex-col`}>
         <Navbar />
-        {children}
+        <main className='flex-1'>{children}</main>
+        <Footer />
       </body>
     </html>
   );

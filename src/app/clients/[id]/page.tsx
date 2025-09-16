@@ -54,7 +54,7 @@ function Client() {
           <div>Contact</div>
           <div className='text-slate-500/80'>0813-7166-9811</div>
           <div>Status</div>
-          <div className='text-slate-500/80 blinking-polyline-div'>{data?.data.status}</div>
+          <div className={data?.data.status === 'Sudah Sampai' ? 'text-green-500/80 font-semibold' : `text-slate-500/80 blinking-polyline-div`}>{data?.data.status}</div>
         </div>
       </div>
     </div>    

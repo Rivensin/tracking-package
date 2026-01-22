@@ -13,7 +13,6 @@ function DriverTracking() {
   //Map Input Search
   const [clientLocation,setClientLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)
   const [driverLocation,setDriverLocation] = useState<{name: string, lat: number, lng: number, address: string} | null> (null)  
-  console.log(tripRef.current)
 
   const setDriverPosition = () => {
     if('geolocation' in navigator){
@@ -55,8 +54,7 @@ function DriverTracking() {
               })
             }) 
             const res = await complete.json()
-            console.log(res.message)
-
+            
             setIsDelivery(false)
             if(intervalRef.current){
               clearInterval(intervalRef.current)
@@ -169,7 +167,11 @@ function DriverTracking() {
     <div className='px-4 mb-10'>
       <div className='flex justify-center items-center mt-6'>
         <div className='w-3/4 mr-2'>
-          <AddressInput onPlaceSelect={setClientLocation} disabled={isDelivery ? true : false} defaultValue={clientLocation?.name || ''}/>
+          <AddressInput
+            onPlaceSelect={setClientLocation} 
+            disabled={isDelivery} 
+            defaultValue={clientLocation?.name || ''}
+          />
         </div>
         <button
           className={`w-1/4 h-10 hover:opacity-80 duration-500 text-white rounded mb-4 text-sm font-roboto font-light ${clientLocation ? 'bg-blue-500' : 'pointer-events-none bg-slate-500/60'} ${isDelivery && clientLocation ? 'bg-red-500' : ''}`}

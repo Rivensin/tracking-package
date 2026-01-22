@@ -65,9 +65,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_PLATFORM_API_KEY}&libraries=places`}
-          async
-          defer
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_PLATFORM_API_KEY}&libraries=places`}
+          strategy='afterInteractive'
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable} ${monaSans.variable} min-h-screen flex flex-col`}>

@@ -5,6 +5,7 @@ import { TrackingRequest } from "@/lib/firebase/services";
 import loading from "./loading";
 import Image from "next/image";
 import { useState } from "react";
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function Home() {
   const fetcher = (url: string) => fetch(url).then(res => res.json())
@@ -13,7 +14,14 @@ export default function Home() {
 
   const copyLink = (id: string, link: string) => {
     setCopyId(id)
-    window.navigator.clipboard.writeText(link)
+    
+    toast.promise(
+    window.navigator.clipboard.writeText(link),{
+        loading: 'Saving...',
+        success: <b>Link copied successfully!</b>,
+        error: <b>Link can't be copied!.</b>,
+      }
+    );
   }
 
   const {data,error,isLoading} = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/api/tracking`,fetcher)
@@ -22,6 +30,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen px-4">
+      <Toaster />
       <div>
         <span className="mt-4 text-2xl font-roboto">Delivery List</span>
       </div>

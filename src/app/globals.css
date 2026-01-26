@@ -64,3 +64,7 @@ a {
 .blinking-polyline-div{
   animation: soft-blink-div 2s ease-in-out infinite;
 }
+
+.button-page{
+  @apply w-28 sm:w-40 my-3 py-3 px-2 font-roboto text-center rounded-md hover:shadow-md  transition-all duration-200 ease-out 
+}

@@ -20,8 +20,6 @@ function Client() {
   if (isLoading) return loading()
   if (error) return <div>Error Loading</div>
   
-  console.log(data?.data)
-
   return (
     <div className='mt-5 px-4 mb-10'>
       <div className='max-w-xl sm:max-w-3xl md:max-w-5xl lg:max-w-7xl mx-auto h-full'>

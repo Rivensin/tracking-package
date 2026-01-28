@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 function Navbar() { 
   const pathname = usePathname()
   return (
-    <header className='w-full flex items-center bg-whiteNav border-2 border-slate-200 mb-5'>
+    <header className='w-full flex items-center bg-whiteNav border-2 border-slate-200 mb-5 bg-white'>
       <div>
         {pathname.includes('clients') ? 
           (

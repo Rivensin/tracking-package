@@ -30,7 +30,7 @@ export default function Home() {
     toast.promise(
       new Promise<void>(resolve => {
         setIsFiltered(status)
-        setFilterTrack(track.filter((delivery : any) => delivery.status.includes(status)))
+        setFilterTrack(track.filter((delivery : TrackingRequest) => delivery.status.includes(status)))
         resolve()
       }),{
         loading: 'Filtering...',

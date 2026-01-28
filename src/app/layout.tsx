@@ -69,7 +69,7 @@ export default function RootLayout({
           strategy='afterInteractive'
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable} ${monaSans.variable} min-h-screen flex flex-col`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${geistRoboto.variable} ${monaSans.variable} min-h-screen flex flex-col bg-slate-50`}>
         <Navbar />
         <main className='flex-1'>{children}</main>
         <Footer />

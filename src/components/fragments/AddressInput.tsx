@@ -9,6 +9,8 @@ type Props = {
       lng: number
       address: string
     }) => void
+  defaultValue: string
+  disabled?: boolean
 }
 
 function AddressInput({onPlaceSelect} : Props) { 

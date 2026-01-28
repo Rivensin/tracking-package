@@ -12,7 +12,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json())
 export default function Home() {
   const [copyId,setCopyId] = useState<string | null> (null)
   const [filterTrack,setFilterTrack] = useState<TrackingRequest | null>(null)
-  const [isFiltered,setIsFiltered] = useState(null)
+  const [isFiltered,setIsFiltered] = useState<string | null>(null)
   
   const copyLink = (id: string, link: string) => {
     setCopyId(id)

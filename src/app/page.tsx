@@ -11,7 +11,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export default function Home() {
   const [copyId,setCopyId] = useState<string | null> (null)
-  const [filterTrack,setFilterTrack] = useState<TrackingRequest | null>(null)
+  const [filterTrack,setFilterTrack] = useState<TrackingRequest[] | null>(null)
   const [isFiltered,setIsFiltered] = useState<string | null>(null)
   
   const copyLink = (id: string, link: string) => {
@@ -115,8 +115,7 @@ export default function Home() {
           ))
         ) : null}
 
-        {filterTrack !== null ? (
-          filterTrack.map((delivery : TrackingRequest) => (
+        {filterTrack?.map((delivery : TrackingRequest) => (
           <div 
             key={delivery.id} 
             className={`flex justify-center items-center p-4 text-center font-roboto font-light ${delivery.status === 'Sedang Mengantar' ? 'bg-red-500/60' : 'bg-green-500/60'}`}>
@@ -146,8 +145,7 @@ export default function Home() {
                 </button>
               </div>
           </div>
-          ))
-        ) : null}
+        ))} 
 
         {isFiltered !== null &&  
         (

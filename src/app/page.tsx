@@ -94,7 +94,7 @@ export default function Home() {
               </div>
               <div className="w-1/4">
                 {delivery.status === 'Sedang Mengantar' ? (
-                  <Link href={`/clients/${delivery.id}`} className="underline text-[#5E50D2] hover:opacity-60 transition-all duration-500 ease-out">{delivery.status}</Link>) 
+                  <Link href={`/clients/${delivery.id}`} className="underline text-[#5E50D2] transition-all duration-300 ease-out hover:bg-black hover:text-white hover:no-underline hover:p-2">{delivery.status}</Link>) 
                   : 
                   delivery.status}
               </div>
@@ -125,9 +125,10 @@ export default function Home() {
               <div className="w-1/4">
                 {delivery.clientLocation.name}
               </div>
-              <div className="w-1/4">
-                {delivery.status === 'Sedang Mengantar' ? (
-                  <Link href={`/clients/${delivery.id}`} className="underline text-[#5E50D2] hover:opacity-60 transition-all duration-500 ease-out">{delivery.status}</Link>) 
+              <div className="w-1/4 ">
+                {delivery.status === 'Sedang Mengantar' ? (                
+                  <Link href={`/clients/${delivery.id}`} className="underline text-[#5E50D2] transition-all duration-300 ease-out hover:bg-black hover:text-white hover:no-underline hover:p-2">{delivery.status}</Link>
+                ) 
                   : 
                   delivery.status}
               </div>
